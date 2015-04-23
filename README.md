@@ -1,0 +1,2 @@
+# SAX
+Symbolic Aggregate approXimation
