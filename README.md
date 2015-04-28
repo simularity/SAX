@@ -7,3 +7,4 @@ It is licensed under the MIT license.
 
 Documentation is non-existent at this time, but will improve.
 
+build with "ant jar"
