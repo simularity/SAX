@@ -5,14 +5,22 @@ import com.simularity.sax.PAA;
 import com.simularity.sax.Deviator;
 import com.simularity.sax.SaxAlphabet;
 
-class SaxWord {
+public class SaxWord {
 	protected SaxAlphabet.Alphabet alpha;
 	protected byte[] word;
 
-	public SaxWord(SaxAlphabet.Alphabet a, PAA paa, Deviator dev) throws IndexOutOfBoundsException {
+	/**
+	 * Create a SaxWord which is normalized as a time series
+	 *
+	 * @param a The Alphabet to use
+	 * @param paa The PAA to Normalize to a SAX Word
+	 * @param dev The Deviator to use to normalize the SAX word with itself
+	 */
+	
+	public SaxWord(SaxAlphabet.Alphabet a, PAA paa, Deviator dev) {
 		int len = paa.getLength();
 		if (len > 15) {
-			throw new IndexOutOfBoundsException("SAX length limited to 15");
+			throw new IllegalArgumentException("SAX length limited to 15");
 		}
 		word = new byte[len];
 		alpha = a;
@@ -21,9 +29,35 @@ class SaxWord {
 		}
 	};
 
-	public SaxWord(SaxAlphabet.Alphabet a, int len, long saxInt) throws IndexOutOfBoundsException {
+	/**
+	 * Create a SaxWord where each element is normalized from a different Deviator.
+	 * This allows us to construct SaxWords from data that are NOT time series, but rather discrete co-temporal values
+	 *
+	 * @param a The SAX Alphabet
+	 * @param paa The PAA to convert to a SAX Word
+	 * @param dev An array of deviators to convert paa. Must be the same size a PAA
+	 *
+	 */
+	
+	public SaxWord(SaxAlphabet.Alphabet a, PAA paa, Deviator [] dev) throws IllegalArgumentException {
+		int len = paa.getLength();
+		if (len > 15) {
+			throw new IllegalArgumentException("SAX length limited to 15");
+		}
+		if (len != dev.length) {
+			throw new IllegalArgumentException("SAX: Deviator Array not the same size as PAA");
+		}
+				
+		word = new byte[len];
+		alpha = a;
+		for (int i = 0; i < word.length; i++) {
+			word[i] = SaxAlphabet.getSaxLetter(a, dev[i].normalize(paa.getIndex(i)));
+		}
+	}
+
+	public SaxWord(SaxAlphabet.Alphabet a, int len, long saxInt) throws IllegalArgumentException {
 		if ((len > 15) || (len < 0)) {
-			throw new IndexOutOfBoundsException("SAX length limited to 15");
+			throw new IllegalArgumentException("SAX length limited to 15");
 		}
 		alpha = a;
 		int space = SaxAlphabet.space(alpha);

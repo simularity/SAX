@@ -2,7 +2,7 @@
 
 package com.simularity.sax;
 import com.simularity.sax.Deviator;
-class BasicDeviator implements Deviator {
+public class BasicDeviator implements Deviator {
 
 	protected double mean;
 	protected double M2;
@@ -43,7 +43,7 @@ class BasicDeviator implements Deviator {
 		double dev = getStdDev();
 		// Perhaps we should throw an exception here?
 		if (dev == 0.0) {
-			return getMean();
+			return 0.0;
 		}
 
 		return (d - getMean()) / dev;

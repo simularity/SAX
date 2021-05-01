@@ -3,7 +3,7 @@
 
 package com.simularity.sax;
 
-class SaxAlphabet {
+public class SaxAlphabet {
 	public enum Alphabet {SAX_2, SAX_3, SAX_4, SAX_5, SAX_6, SAX_7, SAX_8, SAX_9,
 				SAX_10, SAX_11, SAX_12, SAX_13, SAX_14, SAX_15, SAX_16};
 

@@ -1,7 +1,7 @@
 // Deviator - Interface for Generation of Mean and Standard Deviation
 package com.simularity.sax;
 
-interface Deviator {
+public interface Deviator {
 	double getMean();
 	double getStdDev();
 	void reset();

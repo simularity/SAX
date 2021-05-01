@@ -4,7 +4,7 @@ package com.simularity.sax;
 
 import java.util.Map;
 
-class PAA {
+public class PAA {
 	protected double[] vector;
 	protected int [] counts;
 
