@@ -1,13 +1,15 @@
 
 package com.simularity.sax;
 
+import java.math.BigInteger;
+
 import com.simularity.sax.PAA;
 import com.simularity.sax.Deviator;
 import com.simularity.sax.SaxAlphabet;
 
 public class SaxWord {
 	protected SaxAlphabet.Alphabet alpha;
-	protected byte[] word;
+	protected short[] word;
 
 	/**
 	 * Create a SaxWord which is normalized as a time series
@@ -19,10 +21,7 @@ public class SaxWord {
 	
 	public SaxWord(SaxAlphabet.Alphabet a, PAA paa, Deviator dev) {
 		int len = paa.getLength();
-		if (len > 15) {
-			throw new IllegalArgumentException("SAX length limited to 15");
-		}
-		word = new byte[len];
+		word = new short[len];
 		alpha = a;
 		for (int i = 0; i < word.length; i++) {
 			word[i] = SaxAlphabet.getSaxLetter(a, dev.normalize(paa.getIndex(i)));
@@ -41,46 +40,45 @@ public class SaxWord {
 	
 	public SaxWord(SaxAlphabet.Alphabet a, PAA paa, Deviator [] dev) throws IllegalArgumentException {
 		int len = paa.getLength();
-		if (len > 15) {
-			throw new IllegalArgumentException("SAX length limited to 15");
-		}
 		if (len != dev.length) {
 			throw new IllegalArgumentException("SAX: Deviator Array not the same size as PAA");
 		}
 				
-		word = new byte[len];
+		word = new short[len];
 		alpha = a;
 		for (int i = 0; i < word.length; i++) {
 			word[i] = SaxAlphabet.getSaxLetter(a, dev[i].normalize(paa.getIndex(i)));
 		}
 	}
 
-	public SaxWord(SaxAlphabet.Alphabet a, int len, long saxInt) throws IllegalArgumentException {
-		if ((len > 15) || (len < 0)) {
-			throw new IllegalArgumentException("SAX length limited to 15");
+	public SaxWord(SaxAlphabet.Alphabet a, int len, BigInteger saxInt) throws IllegalArgumentException {
+		if (len < 0) {
+			throw new IllegalArgumentException("SAX length must be positive");
 		}
 		alpha = a;
-		int space = SaxAlphabet.space(alpha);
-		word = new byte[len];
+		BigInteger space = BigInteger.valueOf(SaxAlphabet.space(alpha));
+		word = new short[len];
 		int i;
 		for (i = 0; i < len; i++) {
-			word[i] = (byte) (saxInt % space);
-			saxInt /= space;
+			BigInteger [] res = saxInt.divideAndRemainder(space);
+			word[i] = res[1].shortValueExact();
+			saxInt = res[0];
 		}
 	};
 		      
 
-	public long getSaxInt() {
-		long place = 1;
-		long value = 0L;
+	public BigInteger getSaxInt() {
+		BigInteger place = BigInteger.valueOf(1);
+		BigInteger value = BigInteger.valueOf(0);
+		BigInteger space = BigInteger.valueOf(SaxAlphabet.space(alpha));
 		for (int i = 0; i < word.length; i++) {
-			value += place * (int) word[i];
-			place = place * SaxAlphabet.space(alpha);
+			value = value.add(place.multiply( BigInteger.valueOf(word[i])));
+			place = place.multiply(space);
 		}
 		return value;
 	};
 
-	public byte [] getSaxBytes() {return word.clone();};
+	public short [] getSaxBytes() {return word.clone();};
 	public char [] getSaxChars() {
 		char [] result = new char[word.length];
 		for (int i = 0; i < word.length; i++) {

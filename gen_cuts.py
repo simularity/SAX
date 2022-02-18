@@ -11,12 +11,12 @@ def lookupEquiprobableRegions(word_length):
 
 def printCuts(cuts):
     actual = cuts[1:-1]
-    print("{ ", end='')
+    #print("{ ", end='')
     display = False
     last = - actual[0]
     for cut in actual:
         if display:
-            print(", ", end='')
+            print(",", end='')
         else:
             display = True
         print(cut, end='')
@@ -27,7 +27,7 @@ def printCuts(cuts):
         display = True
     print(last, end='')
 
-    print("}")
+    #print("}")
     
 
 alphabet_size = int(sys.argv[1])

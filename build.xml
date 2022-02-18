@@ -16,7 +16,11 @@
     </target>
     <target name="jar" depends="compile" description="create a Jar file for the application">
         <jar destfile="sax.jar">
-            <fileset dir="classes" includes="**/*.class"/>
+          <fileset dir="classes" includes="**/*.class"/>
+          <fileset file="sax_cuts.csv" />
+	  <manifest>
+	    <attribute name="Main-Class" value="com.simularity.sax.SaxAlphabet"/>
+	  </manifest>
         </jar>
     </target>
 </project>
